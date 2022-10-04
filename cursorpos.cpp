@@ -1,4 +1,7 @@
-//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos?redirectedfrom=MSDN
+/*https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos?redirectedfrom=MSDN
+https://learn.microsoft.com/en-us/previous-versions/dd162805(v=vs.85)
+https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient?redirectedfrom=MSDN
+*/
 
 #include <windows.h>
 #include <iostream>

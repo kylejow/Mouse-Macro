@@ -1,7 +1,11 @@
-all: main
+all: main click cursorpos
 CXXFLAGS=-Wall -g
 CXX=g++
 main: main.o
+	$(CXX) -o $@ $^
+click: click.o
+	$(CXX) -o $@ $^
+cursorpos: cursorpos.o
 	$(CXX) -o $@ $^
 clean:
 	rm -f *.o *.exe
