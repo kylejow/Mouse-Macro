@@ -2,3 +2,4 @@
 *.exe
 test.cpp
 *.o
+.vscode/settings.json
