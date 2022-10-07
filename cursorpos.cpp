@@ -7,10 +7,12 @@ https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoc
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <vector>
 
 using std::cout;
 using std::cin;
 using std::thread;
+using std::vector;
 
 void stopProgram(std::atomic_bool& stop){
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
@@ -35,17 +37,41 @@ void clearScreen(){
     SetConsoleCursorPosition(hOut, Position);
 }
 
-int main(){
+void addLocations(std::atomic_bool& stop, vector<POINT>& locations){
     POINT pos;
+    while(!stop){
+        if((GetKeyState(VK_LBUTTON) & 0x80) != 0){
+            GetCursorPos(&pos);
+            locations.push_back(pos);
+            while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
+        }
+        
+    }
+    return;
+}
+
+void printPOINT(POINT& p){
+    cout << p.x << ", " << p.y;
+}
+
+int main(){
+    vector<POINT> locations;
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
+    thread recordClicks(addLocations, ref(stop), ref(locations));
     system("cls");
     setCursor(false);
     while (!stop){
-        GetCursorPos(&pos);
-        cout << pos.x << ", " << pos.y << "              ";
+        cout << locations.size();
         clearScreen();
     }
+    cout << "enter to stop\n";
     stopThread.join();
+    recordClicks.join();
     setCursor(true);
+    for(auto iter = locations.begin(); iter != locations.end(); iter++){
+        printPOINT(*iter);
+        cout << "\n";
+    }
+    system("pause");
 }
