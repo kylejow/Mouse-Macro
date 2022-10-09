@@ -1,6 +1,7 @@
 /*https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos?redirectedfrom=MSDN
 https://learn.microsoft.com/en-us/previous-versions/dd162805(v=vs.85)
 https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient?redirectedfrom=MSDN
+https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate
 */
 
 #include <windows.h>
@@ -45,7 +46,6 @@ void addLocations(std::atomic_bool& stop, vector<POINT>& locations){
             locations.push_back(pos);
             while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
         }
-        
     }
     return;
 }
@@ -58,16 +58,19 @@ int main(){
     vector<POINT> locations;
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
-    thread recordClicks(addLocations, ref(stop), ref(locations));
+    //thread recordClicks(addLocations, ref(stop), ref(locations));
     system("cls");
     setCursor(false);
+    POINT p;
     while (!stop){
+        GetCursorPos(&p);
+        cout << p.x << ", " << p.y << "             \n";
         cout << locations.size();
         clearScreen();
     }
     cout << "enter to stop\n";
     stopThread.join();
-    recordClicks.join();
+    //recordClicks.join();
     setCursor(true);
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         printPOINT(*iter);
