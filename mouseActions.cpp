@@ -1,0 +1,53 @@
+#include <windows.h>
+#include <iostream>
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput?redirectedfrom=MSDN
+//https://stackoverflow.com/questions/28386029/how-to-simulate-mouse-click-using-c
+/*https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
+https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
+
+*/
+
+class screen{
+    public:
+        screen(double x, double y);
+        double getXLen(void);
+        double getYLen(void);
+    private:
+        const double xLen;
+        const double yLen;
+};
+
+screen::screen(double x, double y) : xLen(x), yLen(y){}
+double screen::getXLen(void){return xLen;}
+double screen::getYLen(void){return yLen;}
+
+MOUSEINPUT pointToABSInput(POINT& p, screen& screen){
+    double ABS = 65535.0;
+    MOUSEINPUT mi;
+    mi.dx = ((double)p.x/screen.getXLen())*ABS;
+    mi.dy = ((double)p.y/screen.getYLen())*ABS;
+    mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+    return mi;
+}
+
+int main(){
+    double x = 1920, y= 1080;
+    screen screen(x, y);
+
+    int numInputs = 1;
+    INPUT Inputs[numInputs] = {0};
+
+    POINT p;
+    p.x = 632;
+    p.y = 305;
+
+    Inputs[0].type = INPUT_MOUSE;
+    Inputs[0].mi = pointToABSInput(p, screen);
+    // Inputs[1].type = INPUT_MOUSE;
+    // Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+
+    // Inputs[2].type = INPUT_MOUSE;
+    // Inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+
+    SendInput(1, Inputs, sizeof(INPUT));
+}

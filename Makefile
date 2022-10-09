@@ -1,4 +1,4 @@
-all: main click cursorpos
+all: main mouseActions cursorpos click
 CXXFLAGS=-Wall -g
 CXX=g++
 main: main.o
