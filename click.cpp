@@ -10,9 +10,12 @@ int main(){
     int numInputs = 1;
     INPUT Inputs[numInputs] = {0};
 
+    LONG x = 632;
+    LONG y = 305;
+
     Inputs[0].type = INPUT_MOUSE;
-    Inputs[0].mi.dx = 1920; // desired X coordinate
-    Inputs[0].mi.dy = 1080; // desired Y coordinate
+    Inputs[0].mi.dx = (x/1920.0)*65535.0; // desired X coordinate
+    Inputs[0].mi.dy = (y/1080.0)*65535.0; // desired Y coordinate
     Inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 
     // Inputs[1].type = INPUT_MOUSE;
