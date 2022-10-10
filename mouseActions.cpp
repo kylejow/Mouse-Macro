@@ -21,15 +21,14 @@ screen::screen(double x, double y) : xLen(x), yLen(y){}
 double screen::getXLen(void){return xLen;}
 double screen::getYLen(void){return yLen;}
 
-MOUSEINPUT pointToABSInput(POINT& p, screen& screen){
+void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen){
     double ABS = 65535.0;
-    MOUSEINPUT mi;
     int x = ((double)p.x/screen.getXLen())*ABS;
     int y = ((double)p.y/screen.getYLen())*ABS;
     mi.dx = x;
     mi.dy = y;
     mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-    return mi;
+    // return mi; black screen when returning MOUSINPUT?
 }
 
 int main(){
@@ -44,7 +43,7 @@ int main(){
     p.y = 305;
 
     Inputs[0].type = INPUT_MOUSE;
-    Inputs[0].mi = pointToABSInput(p, screen);
+    pointToABSInput(Inputs[0].mi, p, screen);
     // Inputs[1].type = INPUT_MOUSE;
     // Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
 
