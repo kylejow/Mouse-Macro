@@ -3,3 +3,4 @@
 test.cpp
 *.o
 .vscode/settings.json
+.vscode/tasks.json

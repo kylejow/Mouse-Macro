@@ -24,15 +24,17 @@ double screen::getYLen(void){return yLen;}
 MOUSEINPUT pointToABSInput(POINT& p, screen& screen){
     double ABS = 65535.0;
     MOUSEINPUT mi;
-    mi.dx = ((double)p.x/screen.getXLen())*ABS;
-    mi.dy = ((double)p.y/screen.getYLen())*ABS;
+    int x = ((double)p.x/screen.getXLen())*ABS;
+    int y = ((double)p.y/screen.getYLen())*ABS;
+    mi.dx = x;
+    mi.dy = y;
     mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
     return mi;
 }
 
 int main(){
-    double x = 1920, y= 1080;
-    screen screen(x, y);
+    screen screen((double)GetSystemMetrics(SM_CXSCREEN),
+                  (double)GetSystemMetrics(SM_CYSCREEN));
 
     int numInputs = 1;
     INPUT Inputs[numInputs] = {0};
