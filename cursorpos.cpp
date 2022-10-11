@@ -16,10 +16,12 @@ using std::thread;
 using std::vector;
 
 void stopProgram(std::atomic_bool& stop){
-    cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-    cin.get();
-    stop = true;
-    return;
+    while(1){
+        if((GetKeyState(VK_MENU) & 0x8000) && (GetKeyState(0x51) & 0x8000)){
+            stop = true;
+            return;
+        }
+    }
 }
 
 void setCursor(bool visible){
@@ -62,19 +64,19 @@ int main(){
     system("cls");
     setCursor(false);
     POINT p;
-    while (!stop){
+    while(!stop){
         GetCursorPos(&p);
         cout << p.x << ", " << p.y << "             \n";
         cout << locations.size();
+        cout << "\n\nalt + q to stop\n";
         clearScreen();
     }
-    cout << "enter to stop\n";
     stopThread.join();
     //recordClicks.join();
     setCursor(true);
+    system("cls");
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         printPOINT(*iter);
         cout << "\n";
     }
-    system("pause");
 }
