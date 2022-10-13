@@ -31,6 +31,14 @@ void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen){
     // return mi; black screen when returning MOUSINPUT?
 }
 
+void clickPoint(POINT& p, screen& screen){
+    int numInputs = 1;
+    INPUT Inputs[numInputs] = {0};
+    Inputs[0].type = INPUT_MOUSE;
+    pointToABSInput(Inputs[0].mi, p, screen);
+    SendInput(1, Inputs, sizeof(INPUT));
+}
+
 int main(){
     screen screen((double)GetSystemMetrics(SM_CXSCREEN),
                   (double)GetSystemMetrics(SM_CYSCREEN));
