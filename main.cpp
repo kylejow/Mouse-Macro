@@ -55,12 +55,12 @@ int main(){
     system("cls");
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         printPOINT(*iter);
-        cout << "\n";
     }
-    system("pause");
+    cout << "\nPress enter to click these points\n";
+    while(!(GetKeyState(VK_RETURN) & 0x8000)){};
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         clickPoint(*iter, screen);
-        Sleep(1000);
+        Sleep(200);
     }
 }
 
