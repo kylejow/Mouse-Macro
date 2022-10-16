@@ -1,9 +1,15 @@
 #include "mouse.h"
-
-void addLocations(std::atomic_bool& stop, vector<POINT>& locations){
+#include "cputimer.h"
+#include <iostream>
+void addLocations(std::atomic_bool& stop, vector<POINT>& locations, vector<double>& delays){
     POINT pos;
+    cputimer cputimer;
+    cputimer.reset();
     while(!stop){
         if((GetKeyState(VK_LBUTTON) & 0x80) != 0){
+            cputimer.stop();
+            delays.push_back(cputimer.elapsed());
+            cputimer.reset();
             GetCursorPos(&pos);
             locations.push_back(pos);
             while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};

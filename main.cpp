@@ -10,9 +10,11 @@ key codes       https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual
 
 TODO:
 record duration
-add delay/option to remove all delays
+option to remove all delays
+edit delays
 csv saved macros
 keyboard support
+multiple monitor support
 */
 
 #include <windows.h>
@@ -31,21 +33,29 @@ using std::thread;
 using std::vector;
 
 void stopProgram(std::atomic_bool& stop);
-
+void printVect(vector<double>& vect){
+    auto iter = vect.begin();
+    while(iter != vect.end()){
+        std::cout << *iter << ", ";
+        iter++;
+    }
+    std::cout << "\n";
+}
 int main(){
     vector<POINT> locations;
+    vector<double> delays;
     screen screen((double)GetSystemMetrics(SM_CXSCREEN),
                   (double)GetSystemMetrics(SM_CYSCREEN));
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
-    thread recordClicks(addLocations, ref(stop), ref(locations));
+    thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays));
     system("cls");
     setCursor(false);
     POINT p;
     while(!stop){
         GetCursorPos(&p);
         cout << p.x << ", " << p.y << "             \n";
-        cout << locations.size();
+        cout << "clicks: " << locations.size();
         cout << "\n\nalt + q to stop\n";
         clearScreen();
     }
@@ -56,11 +66,16 @@ int main(){
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         printPOINT(*iter);
     }
-    cout << "\nPress enter to click these points\n";
-    while(!(GetKeyState(VK_RETURN) & 0x8000)){};
-    for(auto iter = locations.begin(); iter != locations.end(); iter++){
-        clickPoint(*iter, screen);
-        Sleep(200);
+    cout << "\nPress shift to click these points\n";
+    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
+    int size = locations.size();
+    //system("pause");
+    delays.push_back(0);//avoid segfault last input
+    // printVect(delays);
+    // system("pause");
+    for(int i = 0; i < size; i++){
+        clickPoint(locations[i], screen);
+        Sleep(delays[i+1]);//skip first delay
     }
 }
 
