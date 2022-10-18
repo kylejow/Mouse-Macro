@@ -9,7 +9,6 @@ MOUSEINPUT      https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-w
 key codes       https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
 TODO:
-record duration
 option to remove all delays
 edit delays
 csv saved macros
@@ -44,11 +43,12 @@ void printVect(vector<double>& vect){
 int main(){
     vector<POINT> locations;
     vector<double> delays;
+    vector<double> clickDurations;
     screen screen((double)GetSystemMetrics(SM_CXSCREEN),
                   (double)GetSystemMetrics(SM_CYSCREEN));
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
-    thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays));
+    thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays), ref(clickDurations));
     system("cls");
     setCursor(false);
     POINT p;
@@ -74,7 +74,7 @@ int main(){
     // printVect(delays);
     // system("pause");
     for(int i = 0; i < size; i++){
-        clickPoint(locations[i], screen);
+        clickPoint(locations[i], screen, clickDurations[i]);
         Sleep(delays[i+1]);//skip first delay
     }
 }

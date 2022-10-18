@@ -1,18 +1,22 @@
 #include "mouse.h"
 #include "cputimer.h"
 #include <iostream>
-void addLocations(std::atomic_bool& stop, vector<POINT>& locations, vector<double>& delays){
+void addLocations(std::atomic_bool& stop, vector<POINT>& locations, vector<double>& delays, vector<double>& clickDurations){
     POINT pos;
-    cputimer cputimer;
-    cputimer.reset();
+    cputimer delay;
+    cputimer duration;
+    delay.reset();
     while(!stop){
         if((GetKeyState(VK_LBUTTON) & 0x80) != 0){
-            cputimer.stop();
-            delays.push_back(cputimer.elapsed());
-            cputimer.reset();
+            duration.reset();
+            delay.stop();
+            delays.push_back(delay.elapsed());
+            delay.reset();
             GetCursorPos(&pos);
             locations.push_back(pos);
             while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
+            duration.stop();
+            clickDurations.push_back(duration.elapsed());
         }
     }
     return;
@@ -26,13 +30,16 @@ void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen){
     // return mi; black screen when returning MOUSINPUT?
 }
 
-void clickPoint(POINT& p, screen& screen){
-    INPUT Inputs[3] = {0};
-    Inputs[0].type = INPUT_MOUSE;
-    pointToABSInput(Inputs[0].mi, p, screen);
-    Inputs[1].type = INPUT_MOUSE;
-    Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-    Inputs[2].type = INPUT_MOUSE;
-    Inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;
-    SendInput(3, Inputs, sizeof(INPUT));
+void clickPoint(POINT& p, screen& screen, double& duration){
+    INPUT moveClick[2] = {0};
+    moveClick[0].type = INPUT_MOUSE;
+    pointToABSInput(moveClick[0].mi, p, screen);
+    moveClick[1].type = INPUT_MOUSE;
+    moveClick[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+    SendInput(2, moveClick, sizeof(INPUT));
+    Sleep(duration);
+    INPUT release[1] = {0};
+    release[0].type = INPUT_MOUSE;
+    release[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    SendInput(1, release, sizeof(INPUT));
 }
