@@ -2,7 +2,17 @@
 #include <iostream>
 
 int main(){
-    PBYTE lpKeyState;
+    BYTE lpKeyState[256];
+    // Sleep(2000);
+    // if(GetKeyboardState(lpKeyState)){
+    //     for(int i = 0; i < 256; i++){
+    //         std::cout << lpKeyState[i] << ", ";
+    //     }
+    //     std::cout << "\n";
+    //     std::cout << lpKeyState[65];
+    // }
     GetKeyboardState(lpKeyState);
-    std::cout << lpKeyState[0];
+    while(!lpKeyState[65]){
+        GetKeyboardState(lpKeyState);
+    }
 }
