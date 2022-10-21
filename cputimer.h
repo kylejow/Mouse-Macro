@@ -9,10 +9,10 @@ class cputimer{
     public:
         void reset(void);
         void stop(void);
-        double elapsed(void);
+        int elapsed(void);
     private:
         std::chrono::high_resolution_clock::time_point begin;
-        double duration;
+        int duration;
 };
 
 #endif

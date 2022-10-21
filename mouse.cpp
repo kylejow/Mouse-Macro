@@ -62,3 +62,35 @@ void moveToPoint(POINT& p, screen& screen){
     pointToABSInput(moveClick[0].mi, p, screen);
     SendInput(1, moveClick, sizeof(INPUT));
 }
+
+void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations){
+    POINT pos;
+    cputimer delay;
+    cputimer duration;
+    delay.reset();
+    while(!stop){
+        if((GetKeyState(VK_LBUTTON) & 0x80) != 0){
+            duration.reset();
+            delay.stop();
+            delays.push_back(delay.elapsed());
+            delay.reset();
+            while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
+            duration.stop();
+            clickDurations.push_back(duration.elapsed());
+        }
+    }
+    delays.push_back(delay.elapsed());
+    return;
+}
+
+void click(int& duration){
+    INPUT down[1] = {0};
+    down[0].type = INPUT_MOUSE;
+    down[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+    SendInput(1, down, sizeof(INPUT));
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    INPUT up[1] = {0};
+    up[0].type = INPUT_MOUSE;
+    up[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    SendInput(1, up, sizeof(INPUT));
+}

@@ -11,6 +11,6 @@ void cputimer::stop(void){
     duration = std::chrono::duration<double, std::milli>(end - begin).count();
 }
 
-double cputimer::elapsed(void){
+int cputimer::elapsed(void){
     return duration;
 }

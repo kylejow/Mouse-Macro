@@ -5,6 +5,7 @@
 #include <atomic>
 #include <vector>
 #include <thread>
+#include <chrono>
 
 #include "screen.h"
 #include "cputimer.h"
@@ -16,5 +17,7 @@ void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen);
 void clickPoint(POINT& p, screen& screen, double& duration);
 void continuousRecord(std::atomic_bool& stop, vector<POINT>& locations, int& polling);
 void moveToPoint(POINT& p, screen& screen);
+void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations);
+void click(int& duration);
 
 #endif

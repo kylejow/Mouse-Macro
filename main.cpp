@@ -44,28 +44,33 @@ void printVect(vector<double>& vect){
 int main(){
     int polling = 1;
     vector<POINT> locations;
-    vector<double> delays;
-    vector<double> clickDurations;
+    vector<int> delays;
+    vector<int> clickDurations;
     screen screen((double)GetSystemMetrics(SM_CXSCREEN),
                   (double)GetSystemMetrics(SM_CYSCREEN));
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
-    //thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays), ref(clickDurations));
-    thread aasdada(continuousRecord, ref(stop), ref(locations), ref(polling));
+    thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
+    thread recordMovement(continuousRecord, ref(stop), ref(locations), ref(polling));
     system("cls");
     setCursor(false);
     POINT p;
     while(!stop){
         GetCursorPos(&p);
         cout << p.x << ", " << p.y << "             \n";
-        cout << "clicks: " << locations.size();
         cout << "\n\nalt + q to stop\n";
         clearScreen();
     }
     stopThread.join();
-    //recordClicks.join();
+    recordClick.join();
+    recordMovement.join();
     setCursor(true);
     system("cls");
+
+
+
+    cout << "\nPress shift to run\n";
+    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
 
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
@@ -74,23 +79,6 @@ int main(){
     }
     exit(0);
 
-
-
-
-    for(auto iter = locations.begin(); iter != locations.end(); iter++){
-        printPOINT(*iter);
-    }
-    cout << "\nPress shift to click these points\n";
-    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
-    int size = locations.size();
-    //system("pause");
-    delays.push_back(0);//avoid segfault last input
-    // printVect(delays);
-    // system("pause");
-    for(int i = 0; i < size; i++){
-        clickPoint(locations[i], screen, clickDurations[i]);
-        Sleep(delays[i+1]);//skip first delay
-    }
 }
 
 void stopProgram(std::atomic_bool& stop){
