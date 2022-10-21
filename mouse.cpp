@@ -1,6 +1,8 @@
+//https://en.cppreference.com/w/cpp/thread/sleep_for
+
 #include "mouse.h"
 #include "cputimer.h"
-#include <iostream>
+
 void addLocations(std::atomic_bool& stop, vector<POINT>& locations, vector<double>& delays, vector<double>& clickDurations){
     POINT pos;
     cputimer delay;
@@ -42,4 +44,21 @@ void clickPoint(POINT& p, screen& screen, double& duration){
     release[0].type = INPUT_MOUSE;
     release[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
     SendInput(1, release, sizeof(INPUT));
+}
+
+void continuousRecord(std::atomic_bool& stop, vector<POINT>& locations, int& polling){
+    POINT pos;
+    while(!stop){
+        GetCursorPos(&pos);
+        locations.push_back(pos);
+        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+    }
+    return;
+}
+
+void moveToPoint(POINT& p, screen& screen){
+    INPUT moveClick[1] = {0};
+    moveClick[0].type = INPUT_MOUSE;
+    pointToABSInput(moveClick[0].mi, p, screen);
+    SendInput(1, moveClick, sizeof(INPUT));
 }

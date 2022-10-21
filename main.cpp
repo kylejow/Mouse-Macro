@@ -30,6 +30,7 @@ using std::cout;
 using std::cin;
 using std::thread;
 using std::vector;
+using std::ref;
 
 void stopProgram(std::atomic_bool& stop);
 void printVect(vector<double>& vect){
@@ -41,6 +42,7 @@ void printVect(vector<double>& vect){
     std::cout << "\n";
 }
 int main(){
+    int polling = 1;
     vector<POINT> locations;
     vector<double> delays;
     vector<double> clickDurations;
@@ -48,7 +50,8 @@ int main(){
                   (double)GetSystemMetrics(SM_CYSCREEN));
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
-    thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays), ref(clickDurations));
+    //thread recordClicks(addLocations, ref(stop), ref(locations), ref(delays), ref(clickDurations));
+    thread aasdada(continuousRecord, ref(stop), ref(locations), ref(polling));
     system("cls");
     setCursor(false);
     POINT p;
@@ -60,9 +63,20 @@ int main(){
         clearScreen();
     }
     stopThread.join();
-    recordClicks.join();
+    //recordClicks.join();
     setCursor(true);
     system("cls");
+
+
+    for(auto iter = locations.begin(); iter != locations.end(); iter++){
+        moveToPoint(*iter, screen);
+        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+    }
+    exit(0);
+
+
+
+
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         printPOINT(*iter);
     }
