@@ -57,10 +57,10 @@ void continuousRecord(std::atomic_bool& stop, vector<POINT>& locations, int& pol
 }
 
 void moveToPoint(POINT& p, screen& screen){
-    INPUT moveClick[1] = {0};
-    moveClick[0].type = INPUT_MOUSE;
-    pointToABSInput(moveClick[0].mi, p, screen);
-    SendInput(1, moveClick, sizeof(INPUT));
+    INPUT move[1] = {0};
+    move[0].type = INPUT_MOUSE;
+    pointToABSInput(move[0].mi, p, screen);
+    SendInput(1, move, sizeof(INPUT));
 }
 
 void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations){
@@ -75,6 +75,7 @@ void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clic
             while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
             clickDuration.stop();
             clickDurations.push_back(clickDuration.elapsed());
+            delay.reset();
         }
     }
     return;

@@ -42,7 +42,6 @@ void printVect(vector<double>& vect){
     std::cout << "\n";
 }
 
-
 void movement(vector<POINT>& locations, screen& screen, int& polling){
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         moveToPoint(*iter, screen);
@@ -50,9 +49,10 @@ void movement(vector<POINT>& locations, screen& screen, int& polling){
     }
 }
 
-
-
 int main(){
+    cout << "\nPress shift to start recording\n";
+    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
+
     int polling = 1;
     vector<POINT> locations;
     vector<int> delays;
@@ -102,15 +102,16 @@ int main(){
 
 
     int x = clickDurations.size();
-    thread asdsaasdsad(movement, ref(locations), ref(screen), ref(polling));
+    thread mouseMovement(movement, ref(locations), ref(screen), ref(polling));
     for(int i = 0; i < x; i++){
         //cout << "\nsleeping for " << delays[i] << "ms\n";
-        Sleep(delays[i]);
+        std::this_thread::sleep_for(std::chrono::milliseconds(delays[i]));
+        //Sleep(delays[i]);
         //cout << "\nclicking down for " << clickDurations[i] << "ms\n";
         click(clickDurations[i]);
         //Sleep(clickDurations[i]);
     }
-    asdsaasdsad.join();
+    mouseMovement.join();
     exit(0);
 
 }
