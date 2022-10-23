@@ -73,6 +73,17 @@ int main(){
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
 
+    for(long long unsigned int i = 0; i < clickDurations.size(); i++){
+        cout << "\nsleeping for " << delays[i] << "ms\n";
+        Sleep(delays[i]);
+        cout << "\nclicking down for " << clickDurations[i] << "ms\n";
+        Sleep(clickDurations[i]);
+    }
+    
+    exit(0);
+
+
+
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         moveToPoint(*iter, screen);
         std::this_thread::sleep_for(std::chrono::milliseconds(polling));

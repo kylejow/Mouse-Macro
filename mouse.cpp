@@ -64,22 +64,19 @@ void moveToPoint(POINT& p, screen& screen){
 }
 
 void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations){
-    POINT pos;
     cputimer delay;
-    cputimer duration;
+    cputimer clickDuration;
     delay.reset();
     while(!stop){
         if((GetKeyState(VK_LBUTTON) & 0x80) != 0){
-            duration.reset();
             delay.stop();
             delays.push_back(delay.elapsed());
-            delay.reset();
+            clickDuration.reset();
             while((GetKeyState(VK_LBUTTON) & 0x80) != 0){};
-            duration.stop();
-            clickDurations.push_back(duration.elapsed());
+            clickDuration.stop();
+            clickDurations.push_back(clickDuration.elapsed());
         }
     }
-    delays.push_back(delay.elapsed());
     return;
 }
 
