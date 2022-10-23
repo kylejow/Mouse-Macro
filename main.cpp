@@ -41,6 +41,17 @@ void printVect(vector<double>& vect){
     }
     std::cout << "\n";
 }
+
+
+void movement(vector<POINT>& locations, screen& screen, int& polling){
+    for(auto iter = locations.begin(); iter != locations.end(); iter++){
+        moveToPoint(*iter, screen);
+        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+    }
+}
+
+
+
 int main(){
     int polling = 1;
     vector<POINT> locations;
@@ -73,21 +84,33 @@ int main(){
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
 
-    for(long long unsigned int i = 0; i < clickDurations.size(); i++){
-        cout << "\nsleeping for " << delays[i] << "ms\n";
+    // for(long long unsigned int i = 0; i < clickDurations.size(); i++){
+    //     cout << "\nsleeping for " << delays[i] << "ms\n";
+    //     Sleep(delays[i]);
+    //     cout << "\nclicking down for " << clickDurations[i] << "ms\n";
+    //     Sleep(clickDurations[i]);
+    // }
+    // exit(0);
+
+
+
+    // for(auto iter = locations.begin(); iter != locations.end(); iter++){
+    //     moveToPoint(*iter, screen);
+    //     std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+    // }
+
+
+
+    int x = clickDurations.size();
+    thread asdsaasdsad(movement, ref(locations), ref(screen), ref(polling));
+    for(int i = 0; i < x; i++){
+        //cout << "\nsleeping for " << delays[i] << "ms\n";
         Sleep(delays[i]);
-        cout << "\nclicking down for " << clickDurations[i] << "ms\n";
-        Sleep(clickDurations[i]);
+        //cout << "\nclicking down for " << clickDurations[i] << "ms\n";
+        click(clickDurations[i]);
+        //Sleep(clickDurations[i]);
     }
-    
-    exit(0);
-
-
-
-    for(auto iter = locations.begin(); iter != locations.end(); iter++){
-        moveToPoint(*iter, screen);
-        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
-    }
+    asdsaasdsad.join();
     exit(0);
 
 }
@@ -100,3 +123,5 @@ void stopProgram(std::atomic_bool& stop){
         }
     }
 }
+
+
