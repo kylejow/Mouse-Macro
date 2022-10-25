@@ -33,21 +33,6 @@ using std::vector;
 using std::ref;
 
 void stopProgram(std::atomic_bool& stop);
-void printVect(vector<double>& vect){
-    auto iter = vect.begin();
-    while(iter != vect.end()){
-        std::cout << *iter << ", ";
-        iter++;
-    }
-    std::cout << "\n";
-}
-
-void movement(vector<POINT>& locations, screen& screen, int& polling){
-    for(auto iter = locations.begin(); iter != locations.end(); iter++){
-        moveToPoint(*iter, screen);
-        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
-    }
-}
 
 int main(){
     cout << "\nPress shift to start recording\n";
@@ -62,7 +47,7 @@ int main(){
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
     thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
-    thread recordMovement(continuousRecord, ref(stop), ref(locations), ref(polling));
+    thread recordMovement(recordMovements, ref(stop), ref(locations), ref(polling));
     system("cls");
     setCursor(false);
     POINT p;
@@ -78,42 +63,13 @@ int main(){
     setCursor(true);
     system("cls");
 
-
-
     cout << "\nPress shift to run\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
-
-    // for(long long unsigned int i = 0; i < clickDurations.size(); i++){
-    //     cout << "\nsleeping for " << delays[i] << "ms\n";
-    //     Sleep(delays[i]);
-    //     cout << "\nclicking down for " << clickDurations[i] << "ms\n";
-    //     Sleep(clickDurations[i]);
-    // }
-    // exit(0);
-
-
-
-    // for(auto iter = locations.begin(); iter != locations.end(); iter++){
-    //     moveToPoint(*iter, screen);
-    //     std::this_thread::sleep_for(std::chrono::milliseconds(polling));
-    // }
-
-
-
-    int x = clickDurations.size();
-    thread mouseMovement(movement, ref(locations), ref(screen), ref(polling));
-    for(int i = 0; i < x; i++){
-        //cout << "\nsleeping for " << delays[i] << "ms\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(delays[i]));
-        //Sleep(delays[i]);
-        //cout << "\nclicking down for " << clickDurations[i] << "ms\n";
-        click(clickDurations[i]);
-        //Sleep(clickDurations[i]);
-    }
+    thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
+    runClicks(clickDurations, delays);
     mouseMovement.join();
-    exit(0);
-
+    return 0;
 }
 
 void stopProgram(std::atomic_bool& stop){
@@ -124,5 +80,3 @@ void stopProgram(std::atomic_bool& stop){
         }
     }
 }
-
-
