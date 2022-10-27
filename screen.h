@@ -3,7 +3,7 @@
 
 class screen{
     public:
-        screen(double x, double y);
+        screen(void);
         double getXLen(void);
         double getYLen(void);
     private:

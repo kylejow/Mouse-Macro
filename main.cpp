@@ -35,6 +35,7 @@ using std::ref;
 void stopProgram(std::atomic_bool& stop);
 
 int main(){
+    system("cls");
     cout << "\nPress shift to start recording\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
@@ -42,8 +43,7 @@ int main(){
     vector<POINT> locations;
     vector<int> delays;
     vector<int> clickDurations;
-    screen screen((double)GetSystemMetrics(SM_CXSCREEN),
-                  (double)GetSystemMetrics(SM_CYSCREEN));
+    screen screen;
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
     thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
