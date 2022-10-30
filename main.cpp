@@ -11,7 +11,7 @@ key codes       https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual
 TODO:
 option to remove all delays
 edit delays
-csv saved macros
+json saved macros
 keyboard support
 multiple monitor support
 */
@@ -25,6 +25,7 @@ multiple monitor support
 #include "display.h"
 #include "screen.h"
 #include "mouse.h"
+#include "json.hpp"
 
 using std::cout;
 using std::cin;
@@ -53,7 +54,7 @@ int main(){
     POINT p;
     while(!stop){
         GetCursorPos(&p);
-        cout << p.x << ", " << p.y << "             \n";
+        cout << "Current Location: " << p.x << ", " << p.y << "             \n";
         cout << "\n\nalt + q to stop\n";
         clearScreen();
     }
@@ -69,6 +70,15 @@ int main(){
     thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
     runClicks(clickDurations, delays);
     mouseMovement.join();
+    nlohmann::json savedMacro;
+    savedMacro["delays"] = delays;
+    savedMacro["clickDurations"] = clickDurations;
+    vector<long> tmp;
+    for(int i = 0; i < locations.size(); i++){
+        tmp[0] = locations[i].x;
+        tmp[0] = locations[i].y;
+        savedMacro["locations"][i] = tmp;
+    }
     return 0;
 }
 
