@@ -18,6 +18,7 @@ multiple monitor support
 
 #include <windows.h>
 #include <iostream>
+#include <fstream>
 #include <thread>
 #include <atomic>
 #include <vector>
@@ -25,10 +26,12 @@ multiple monitor support
 #include "display.h"
 #include "screen.h"
 #include "mouse.h"
+#include "menu.h"
 #include "json.hpp"
 
 using std::cout;
 using std::cin;
+using std::string;
 using std::thread;
 using std::vector;
 using std::ref;
@@ -36,6 +39,40 @@ using std::ref;
 void stopProgram(std::atomic_bool& stop);
 
 int main(){
+    std::ifstream load("saved.json");
+    nlohmann::ordered_json savedMacros = nlohmann::ordered_json::parse(load);
+    load.close();
+    string input;
+    while(1){
+        system("cls");
+        cout << "1. Run saved macro\n"
+             << "2. Record new macro\n"
+             << "3. View macros\n"
+             << "4. Delete macro\n"
+             << "\n\nq to quit\n\n";
+        cin >> input;
+        if(input == "1"){
+
+        }else if(input == "2"){
+
+        }else if(input == "3"){
+            if(noSavedMacros(savedMacros)){
+                    continue;
+            }
+            system("cls");
+            printSavedTargets(savedMacros);
+            system("pause");
+            continue;
+        }else if(input == "4"){
+
+        }else if(input == "q"){
+            exit(0);
+        }
+    }
+    exit(0);
+
+
+
     system("cls");
     cout << "\nPress shift to start recording\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
@@ -67,18 +104,22 @@ int main(){
     cout << "\nPress shift to run\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
-    thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
-    runClicks(clickDurations, delays);
-    mouseMovement.join();
-    nlohmann::json savedMacro;
-    savedMacro["delays"] = delays;
-    savedMacro["clickDurations"] = clickDurations;
-    vector<long> tmp;
-    for(int i = 0; i < locations.size(); i++){
+    // thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
+    // runClicks(clickDurations, delays);
+    // mouseMovement.join();
+    nlohmann::ordered_json savedMacro;
+    savedMacro["1"]["Name"] = "Test macro 1";
+    savedMacro["1"]["delays"] = delays;
+    savedMacro["1"]["clickDurations"] = clickDurations;
+    vector<long> tmp = {NULL, NULL};
+    for(unsigned long long int i = 0; i < locations.size(); i++){
         tmp[0] = locations[i].x;
-        tmp[0] = locations[i].y;
-        savedMacro["locations"][i] = tmp;
+        tmp[1] = locations[i].y;
+        savedMacro["1"]["locations"][i] = tmp;
     }
+    std::ofstream save("saved.json");
+    save << savedMacro.dump(1) + "\n";
+    save.close();
     return 0;
 }
 
