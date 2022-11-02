@@ -32,16 +32,17 @@ multiple monitor support
 using std::cout;
 using std::cin;
 using std::string;
-using std::thread;
 using std::vector;
 using std::ref;
 
-void stopProgram(std::atomic_bool& stop);
-
 int main(){
+    nlohmann::ordered_json savedMacros;
     std::ifstream load("saved.json");
-    nlohmann::ordered_json savedMacros = nlohmann::ordered_json::parse(load);
+    if(load){
+        savedMacros = nlohmann::ordered_json::parse(load);
+    }
     load.close();
+    screen screen;
     string input;
     while(1){
         system("cls");
@@ -52,9 +53,17 @@ int main(){
              << "\n\nq to quit\n\n";
         cin >> input;
         if(input == "1"){
-
+            // thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
+            // runClicks(clickDurations, delays);
+            // mouseMovement.join();
+            break;
         }else if(input == "2"){
-
+            string name = "test1";
+            savedMacros["1"] = recordMouse(name);
+            std::ofstream save("saved.json");
+            save << savedMacros.dump(1) + "\n";
+            save.close();
+            break;
         }else if(input == "3"){
             if(noSavedMacros(savedMacros)){
                     continue;
@@ -69,65 +78,5 @@ int main(){
             exit(0);
         }
     }
-    exit(0);
-
-
-
-    system("cls");
-    cout << "\nPress shift to start recording\n";
-    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
-
-    int polling = 1;
-    vector<POINT> locations;
-    vector<int> delays;
-    vector<int> clickDurations;
-    screen screen;
-    std::atomic_bool stop = false;
-    thread stopThread(stopProgram, ref(stop));
-    thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
-    thread recordMovement(recordMovements, ref(stop), ref(locations), ref(polling));
-    system("cls");
-    setCursor(false);
-    POINT p;
-    while(!stop){
-        GetCursorPos(&p);
-        cout << "Current Location: " << p.x << ", " << p.y << "             \n";
-        cout << "\n\nalt + q to stop\n";
-        clearScreen();
-    }
-    stopThread.join();
-    recordClick.join();
-    recordMovement.join();
-    setCursor(true);
-    system("cls");
-
-    cout << "\nPress shift to run\n";
-    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
-
-    // thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
-    // runClicks(clickDurations, delays);
-    // mouseMovement.join();
-    nlohmann::ordered_json savedMacro;
-    savedMacro["1"]["Name"] = "Test macro 1";
-    savedMacro["1"]["delays"] = delays;
-    savedMacro["1"]["clickDurations"] = clickDurations;
-    vector<long> tmp = {NULL, NULL};
-    for(unsigned long long int i = 0; i < locations.size(); i++){
-        tmp[0] = locations[i].x;
-        tmp[1] = locations[i].y;
-        savedMacro["1"]["locations"][i] = tmp;
-    }
-    std::ofstream save("saved.json");
-    save << savedMacro.dump(1) + "\n";
-    save.close();
     return 0;
-}
-
-void stopProgram(std::atomic_bool& stop){
-    while(1){
-        if((GetKeyState(VK_MENU) & 0x8000) && (GetKeyState(0x51) & 0x8000)){
-            stop = true;
-            return;
-        }
-    }
 }

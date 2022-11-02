@@ -11,12 +11,12 @@ void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen){
     // return mi; black screen when returning MOUSINPUT?
 }
 
-void recordMovements(std::atomic_bool& stop, vector<POINT>& locations, int& polling){
+void recordMovements(std::atomic_bool& stop, vector<POINT>& locations){
     POINT pos;
     while(!stop){
         GetCursorPos(&pos);
         locations.push_back(pos);
-        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     return;
 }
@@ -57,6 +57,46 @@ void click(int& duration){
     up[0].mi.dwFlags = MOUSEEVENTF_LEFTUP;
     SendInput(1, up, sizeof(INPUT));
 }
+
+nlohmann::ordered_json recordMouse(std::string& name){
+    vector<int> delays;
+    vector<int> clickDurations;
+    vector<POINT> locations;
+    system("cls");
+    cout << "\nPress shift to start recording\n";
+    while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
+
+    std::atomic_bool stop = false;
+    thread stopThread(stopProgram, ref(stop));
+    thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
+    thread recordMovement(recordMovements, ref(stop), ref(locations));
+    system("cls");
+    setCursor(false);
+    POINT p;
+    while(!stop){
+        GetCursorPos(&p);
+        cout << "Current Location: " << p.x << ", " << p.y << "             \n";
+        cout << "\n\nalt + q to stop\n";
+        clearScreen();
+    }
+    stopThread.join();
+    recordClick.join();
+    recordMovement.join();
+    setCursor(true);
+    nlohmann::ordered_json macro;
+    macro["Name"] = name;
+    macro["delays"] = delays;
+    macro["clickDurations"] = clickDurations;
+    vector<long> tmp = {NULL, NULL};
+    for(unsigned long long int i = 0; i < locations.size(); i++){
+        tmp[0] = locations[i].x;
+        tmp[1] = locations[i].y;
+        macro["locations"][i] = tmp;
+    }
+    system("cls");
+    return macro;
+}
+
 
 void runMovement(vector<POINT>& locations, screen& screen, int& polling){
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
