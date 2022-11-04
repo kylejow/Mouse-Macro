@@ -24,7 +24,7 @@ void moveToPoint(POINT& p, screen& screen);
 void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations);
 void click(int& duration);
 nlohmann::ordered_json recordMouse(std::string& name);
-void runMovement(vector<POINT>& locations, screen& screen, int& polling);
+void runMovement(vector<POINT>& locations, screen& screen);
 void runClicks(vector<int>& clickDurations, vector<int>& delays);
 
 #endif

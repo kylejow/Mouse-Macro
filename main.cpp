@@ -53,10 +53,26 @@ int main(){
              << "\n\nq to quit\n\n";
         cin >> input;
         if(input == "1"){
-            // thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
-            // runClicks(clickDurations, delays);
-            // mouseMovement.join();
-            break;
+            if(noSavedMacros(savedMacros)){
+                    continue;
+            }
+            system("cls");
+            int chosen = chooseFromSaved(savedMacros);
+            vector<int> delays = savedMacros[std::to_string(chosen)]["delays"];
+            vector<int> clickDurations = savedMacros[std::to_string(chosen)]["clickDurations"];
+            vector<POINT> locations(savedMacros[std::to_string(chosen)]["locations"].size());
+            system("cls");
+            cout << "Running...\n";
+            int i = 0;
+            for(auto iter : savedMacros[std::to_string(chosen)]["locations"]){
+                locations[i].x = iter[0];
+                locations[i].y = iter[1];
+                i++;
+            }
+            thread mouseMovement(runMovement, ref(locations), ref(screen));
+            runClicks(clickDurations, delays);
+            mouseMovement.join();
+            system("pause");
         }else if(input == "2"){
             string name = "test1";
             savedMacros["1"] = recordMouse(name);

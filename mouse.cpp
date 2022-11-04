@@ -98,10 +98,10 @@ nlohmann::ordered_json recordMouse(std::string& name){
 }
 
 
-void runMovement(vector<POINT>& locations, screen& screen, int& polling){
+void runMovement(vector<POINT>& locations, screen& screen){
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         moveToPoint(*iter, screen);
-        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
