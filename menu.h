@@ -14,6 +14,6 @@ using std::vector;
 
 void printSavedTargets(nlohmann::ordered_json& savedMacros);
 bool noSavedMacros(nlohmann::ordered_json& savedMacros);
-int chooseFromSaved(nlohmann::ordered_json savedMacros);
+string chooseFromSaved(nlohmann::ordered_json savedMacros);
 
 #endif

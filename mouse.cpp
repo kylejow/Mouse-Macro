@@ -84,7 +84,6 @@ nlohmann::ordered_json recordMouse(std::string& name){
     recordMovement.join();
     setCursor(true);
     nlohmann::ordered_json macro;
-    macro["Name"] = name;
     macro["delays"] = delays;
     macro["clickDurations"] = clickDurations;
     vector<long> tmp = {NULL, NULL};

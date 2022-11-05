@@ -1,9 +1,9 @@
 #include "menu.h"
 
 void printSavedTargets(nlohmann::ordered_json& savedMacros){
-    int i = 1;
-    for(auto macro : savedMacros){
-        cout << i++ << ". " << macro["Name"].get<std::string>() << "\n";
+    int num = 1;
+    for(auto i = savedMacros.begin(); i != savedMacros.end(); i++){
+        cout << num++ << ". " << i.key() << "\n";
     }
     cout << "\n";
 }
@@ -18,10 +18,13 @@ bool noSavedMacros(nlohmann::ordered_json& savedMacros){
     return false;
 }
 
-int chooseFromSaved(nlohmann::ordered_json savedMacros){
+string chooseFromSaved(nlohmann::ordered_json savedMacros){
     int chosen = 0;
     int numSaved = savedMacros.size();
-
+    vector<string> names;
+    for(auto i = savedMacros.begin(); i != savedMacros.end(); i++){
+        names.push_back(i.key());
+    }
     system("cls");
     printSavedTargets(savedMacros);
     cin >> chosen;
@@ -32,5 +35,5 @@ int chooseFromSaved(nlohmann::ordered_json savedMacros){
         cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
         cin >> chosen;
     }
-    return chosen;
+    return names[chosen-1];
 }

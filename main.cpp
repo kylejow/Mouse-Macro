@@ -54,17 +54,17 @@ int main(){
         cin >> input;
         if(input == "1"){
             if(noSavedMacros(savedMacros)){
-                    continue;
+                continue;
             }
             system("cls");
-            int chosen = chooseFromSaved(savedMacros);
-            vector<int> delays = savedMacros[std::to_string(chosen)]["delays"];
-            vector<int> clickDurations = savedMacros[std::to_string(chosen)]["clickDurations"];
-            vector<POINT> locations(savedMacros[std::to_string(chosen)]["locations"].size());
+            string name = chooseFromSaved(savedMacros);
+            vector<int> delays = savedMacros[name]["delays"];
+            vector<int> clickDurations = savedMacros[name]["clickDurations"];
+            vector<POINT> locations(savedMacros[name]["locations"].size());
             system("cls");
             cout << "Running...\n";
             int i = 0;
-            for(auto iter : savedMacros[std::to_string(chosen)]["locations"]){
+            for(auto iter : savedMacros[name]["locations"]){
                 locations[i].x = iter[0];
                 locations[i].y = iter[1];
                 i++;
@@ -74,12 +74,14 @@ int main(){
             mouseMovement.join();
             system("pause");
         }else if(input == "2"){
-            string name = "test1";
-            savedMacros["1"] = recordMouse(name);
+            system("cls");
+            string name;
+            cout << "Enter macro name: ";
+            cin >> name;
+            savedMacros[name] = recordMouse(name);
             std::ofstream save("saved.json");
             save << savedMacros.dump(1) + "\n";
             save.close();
-            break;
         }else if(input == "3"){
             if(noSavedMacros(savedMacros)){
                     continue;
@@ -89,9 +91,13 @@ int main(){
             system("pause");
             continue;
         }else if(input == "4"){
-
+            if(noSavedMacros(savedMacros)){
+                    continue;
+            }
+            system("cls");
+            savedMacros.erase(chooseFromSaved(savedMacros));
         }else if(input == "q"){
-            exit(0);
+            break;
         }
     }
     return 0;
