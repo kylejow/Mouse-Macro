@@ -62,7 +62,7 @@ int main(){
             vector<int> clickDurations = savedMacros[name]["clickDurations"];
             vector<POINT> locations(savedMacros[name]["locations"].size());
             system("cls");
-            cout << "Running...\n";
+            cout << "Running...\n\n";
             int i = 0;
             for(auto iter : savedMacros[name]["locations"]){
                 locations[i].x = iter[0];
@@ -96,6 +96,9 @@ int main(){
             }
             system("cls");
             savedMacros.erase(chooseFromSaved(savedMacros));
+            std::ofstream save("saved.json");
+            save << savedMacros.dump(1) + "\n";
+            save.close();
         }else if(input == "q"){
             break;
         }
