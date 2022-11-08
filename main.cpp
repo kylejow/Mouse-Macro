@@ -40,6 +40,9 @@ int main(){
     std::ifstream load("saved.json");
     if(load){
         savedMacros = nlohmann::ordered_json::parse(load);
+        std::ofstream backup("backup.json");
+        backup << savedMacros.dump(1) + "\n";
+        backup.close();
     }
     load.close();
     screen screen;
