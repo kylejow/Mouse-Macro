@@ -1,21 +1,18 @@
 #include "menu.h"
 
-void printSavedTargets(nlohmann::ordered_json& savedMacros){
+int printSavedTargets(nlohmann::ordered_json& savedMacros){
+    system("cls");
+    if(savedMacros.size() == 0){
+        cout << "No saved macros\n\n\n";
+        system("pause");
+        return 1;
+    }
     int num = 1;
     for(auto i = savedMacros.begin(); i != savedMacros.end(); i++){
         cout << num++ << ". " << i.key() << "\n";
     }
     cout << "\n";
-}
-
-bool noSavedMacros(nlohmann::ordered_json& savedMacros){
-    if(savedMacros.size() == 0){
-        system("cls");
-        cout << "No saved macros\n\n\n";
-        system("pause");
-        return true;
-    }
-    return false;
+    return 0;
 }
 
 string chooseFromSaved(nlohmann::ordered_json savedMacros){

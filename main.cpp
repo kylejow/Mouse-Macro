@@ -56,10 +56,9 @@ int main(){
              << "\n\nq to quit\n\n";
         cin >> input;
         if(input == "1"){
-            if(noSavedMacros(savedMacros)){
+            if(printSavedTargets(savedMacros)){
                 continue;
             }
-            system("cls");
             string name = chooseFromSaved(savedMacros);
             vector<int> delays = savedMacros[name]["delays"];
             vector<int> clickDurations = savedMacros[name]["clickDurations"];
@@ -75,6 +74,7 @@ int main(){
             thread mouseMovement(runMovement, ref(locations), ref(screen));
             runClicks(clickDurations, delays);
             mouseMovement.join();
+            system("cls");
             system("pause");
         }else if(input == "2"){
             system("cls");
@@ -86,18 +86,15 @@ int main(){
             save << savedMacros.dump(1) + "\n";
             save.close();
         }else if(input == "3"){
-            if(noSavedMacros(savedMacros)){
-                    continue;
+            if(printSavedTargets(savedMacros)){
+                continue;
             }
-            system("cls");
-            printSavedTargets(savedMacros);
             system("pause");
             continue;
         }else if(input == "4"){
-            if(noSavedMacros(savedMacros)){
-                    continue;
+            if(printSavedTargets(savedMacros)){
+                continue;
             }
-            system("cls");
             savedMacros.erase(chooseFromSaved(savedMacros));
             std::ofstream save("saved.json");
             save << savedMacros.dump(1) + "\n";
