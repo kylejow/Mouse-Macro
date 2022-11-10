@@ -58,7 +58,7 @@ void click(int& duration){
     SendInput(1, up, sizeof(INPUT));
 }
 
-nlohmann::ordered_json recordMouse(std::string& name){
+nlohmann::ordered_json recordMouse(void){
     vector<int> delays;
     vector<int> clickDurations;
     vector<POINT> locations;

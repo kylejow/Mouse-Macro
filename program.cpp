@@ -8,3 +8,25 @@ void stopProgram(std::atomic_bool& stop){
         }
     }
 }
+
+int getIntInput(std::string& prompt){
+    system("cls");
+    int i;
+    std::cout << prompt;
+    std::cin >> i;
+    while(std::cin.fail()){
+        system("cls");
+        std::cout << prompt;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+        std::cin >> i;
+    }
+    system("cls");
+    return i;
+}
+
+void saveToFile(std::string filename, nlohmann::ordered_json& savedMacros){
+    std::ofstream save("saved.json");
+    save << savedMacros.dump(1) + "\n";
+    save.close();
+}

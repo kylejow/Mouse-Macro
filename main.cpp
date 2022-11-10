@@ -9,8 +9,7 @@ MOUSEINPUT      https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-w
 key codes       https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
 TODO:
-option to remove all delays
-edit delays
+load/save backup
 json saved macros
 keyboard support
 multiple monitor support
@@ -52,7 +51,8 @@ int main(){
         cout << "1. Run saved macro\n"
              << "2. Record new macro\n"
              << "3. View macros\n"
-             << "4. Delete macro\n"
+             << "4. Edit macro click duration\n"
+             << "5. Delete macro\n"
              << "\n\nq to quit\n\n";
         cin >> input;
         if(input == "1"){
@@ -81,10 +81,8 @@ int main(){
             string name;
             cout << "Enter macro name: ";
             cin >> name;
-            savedMacros[name] = recordMouse(name);
-            std::ofstream save("saved.json");
-            save << savedMacros.dump(1) + "\n";
-            save.close();
+            savedMacros[name] = recordMouse();
+            saveToFile("saved.json", savedMacros);
         }else if(input == "3"){
             if(printSavedTargets(savedMacros)){
                 continue;
@@ -95,13 +93,23 @@ int main(){
             if(printSavedTargets(savedMacros)){
                 continue;
             }
+            string name = chooseFromSaved(savedMacros);
+            string prompt = "Enter new keypress duration: ";
+            int duration = getIntInput(prompt);
+            for(unsigned long long int i = 0; i < savedMacros[name]["clickDurations"].size(); i++){
+                savedMacros[name]["clickDurations"][i] = duration;
+            }
+            saveToFile("saved.json", savedMacros);
+        }else if(input == "5"){
+            if(printSavedTargets(savedMacros)){
+                continue;
+            }
             savedMacros.erase(chooseFromSaved(savedMacros));
-            std::ofstream save("saved.json");
-            save << savedMacros.dump(1) + "\n";
-            save.close();
+            saveToFile("saved.json", savedMacros);
         }else if(input == "q"){
             break;
         }
     }
+    system("cls");
     return 0;
 }

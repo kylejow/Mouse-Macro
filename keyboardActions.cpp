@@ -11,8 +11,15 @@ int main(){
     //     std::cout << "\n";
     //     std::cout << lpKeyState[65];
     // }
-    GetKeyboardState(lpKeyState);
-    while(!lpKeyState[65]){
-        GetKeyboardState(lpKeyState);
+    Sleep(2000);
+    if(GetKeyboardState(lpKeyState)){
+        std::cout << "success\n";
+        if((lpKeyState[16] & 0x8000) != 0){
+            std::cout << "shift down from kbstate";
+        }
     }
+    if((GetKeyState(16) & 0x8000) != 0){
+        std::cout << "shift down from getkeystate";
+    }
+
 }
