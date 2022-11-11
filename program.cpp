@@ -26,7 +26,7 @@ int getIntInput(std::string& prompt){
 }
 
 void saveToFile(std::string filename, nlohmann::ordered_json& savedMacros){
-    std::ofstream save("saved.json");
+    std::ofstream save(filename);
     save << savedMacros.dump(1) + "\n";
     save.close();
 }

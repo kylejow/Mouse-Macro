@@ -35,13 +35,12 @@ using std::vector;
 using std::ref;
 
 int main(){
+    string filename;
     nlohmann::ordered_json savedMacros;
-    std::ifstream load("saved.json");
+    std::ifstream load("profile.json");
     if(load){
         savedMacros = nlohmann::ordered_json::parse(load);
-        std::ofstream backup("backup.json");
-        backup << savedMacros.dump(1) + "\n";
-        backup.close();
+        saveToFile("backup.json", savedMacros);
     }
     load.close();
     screen screen;
@@ -53,8 +52,11 @@ int main(){
              << "3. View macros\n"
              << "4. Edit macro click duration\n"
              << "5. Delete macro\n"
+             << "6. Load profile\n"
+             << "7. Save profile\n"
              << "\n\nq to quit\n\n";
         cin >> input;
+        system("cls");
         if(input == "1"){
             if(printSavedTargets(savedMacros)){
                 continue;
@@ -77,12 +79,11 @@ int main(){
             system("cls");
             system("pause");
         }else if(input == "2"){
-            system("cls");
             string name;
             cout << "Enter macro name: ";
             cin >> name;
             savedMacros[name] = recordMouse();
-            saveToFile("saved.json", savedMacros);
+            saveToFile("profile.json", savedMacros);
         }else if(input == "3"){
             if(printSavedTargets(savedMacros)){
                 continue;
@@ -99,13 +100,31 @@ int main(){
             for(unsigned long long int i = 0; i < savedMacros[name]["clickDurations"].size(); i++){
                 savedMacros[name]["clickDurations"][i] = duration;
             }
-            saveToFile("saved.json", savedMacros);
+            saveToFile("profile.json", savedMacros);
         }else if(input == "5"){
             if(printSavedTargets(savedMacros)){
                 continue;
             }
             savedMacros.erase(chooseFromSaved(savedMacros));
-            saveToFile("saved.json", savedMacros);
+            saveToFile("profile.json", savedMacros);
+        }else if(input == "6"){
+            cout << "Enter filename: ";
+            cin >> filename;
+            std::ifstream load(filename);
+            if(load){
+                savedMacros = nlohmann::ordered_json::parse(load);
+            }else{
+                system("cls");
+                cout << "File does not exist\n\n";
+                system("pause");
+            }
+            load.close();
+        }else if(input == "7"){
+            cout << "Enter filename: ";
+            cin >> filename;
+            std::ofstream createBackup(filename);
+            createBackup << savedMacros.dump(1) + "\n";
+            createBackup.close();
         }else if(input == "q"){
             break;
         }
