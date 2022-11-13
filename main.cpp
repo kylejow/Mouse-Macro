@@ -65,14 +65,14 @@ int main(){
             vector<int> delays = savedMacros[name]["delays"];
             vector<int> clickDurations = savedMacros[name]["clickDurations"];
             vector<POINT> locations(savedMacros[name]["locations"].size());
-            system("cls");
-            cout << "Running...\n\n";
             int i = 0;
             for(auto iter : savedMacros[name]["locations"]){
                 locations[i].x = iter[0];
                 locations[i].y = iter[1];
                 i++;
             }
+            system("cls");
+            cout << "Running...\n\n";
             thread mouseMovement(runMovement, ref(locations), ref(screen));
             runClicks(clickDurations, delays);
             mouseMovement.join();
@@ -113,6 +113,7 @@ int main(){
             std::ifstream load(filename);
             if(load){
                 savedMacros = nlohmann::ordered_json::parse(load);
+                saveToFile("profile.json", savedMacros);
             }else{
                 system("cls");
                 cout << "File does not exist\n\n";
@@ -122,9 +123,7 @@ int main(){
         }else if(input == "7"){
             cout << "Enter filename: ";
             cin >> filename;
-            std::ofstream createBackup(filename);
-            createBackup << savedMacros.dump(1) + "\n";
-            createBackup.close();
+            saveToFile(filename, savedMacros);
         }else if(input == "q"){
             break;
         }
