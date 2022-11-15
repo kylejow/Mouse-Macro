@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main(){
-    BYTE lpKeyState[256];
+    PBYTE lpKeyState;
     // Sleep(2000);
     // if(GetKeyboardState(lpKeyState)){
     //     for(int i = 0; i < 256; i++){
