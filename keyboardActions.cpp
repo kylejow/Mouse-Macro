@@ -1,8 +1,10 @@
 #include <windows.h>
 #include <iostream>
+#include <vector>
 
 int main(){
     PBYTE lpKeyState;
+    std::vector<SHORT> keys(256);
     // Sleep(2000);
     // if(GetKeyboardState(lpKeyState)){
     //     for(int i = 0; i < 256; i++){
@@ -18,7 +20,10 @@ int main(){
             std::cout << "shift down from kbstate";
         }
     }
-    if((GetKeyState(16) & 0x8000) != 0){
+    for(int i = 0; i < 256; i++){
+        keys[i] = GetKeyState(i);
+    }
+    if((keys[16] & 0x8000) != 0){
         std::cout << "shift down from getkeystate";
     }
 

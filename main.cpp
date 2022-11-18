@@ -9,8 +9,6 @@ MOUSEINPUT      https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-w
 key codes       https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
 TODO:
-load/save backup
-json saved macros
 keyboard support
 multiple monitor support
 */
@@ -53,7 +51,7 @@ int main(){
              << "4. Edit macro click duration\n"
              << "5. Delete macro\n"
              << "6. Load profile\n"
-             << "7. Save profile\n"
+             << "7. Export profile\n"
              << "\n\nq to quit\n\n";
         cin >> input;
         system("cls");
