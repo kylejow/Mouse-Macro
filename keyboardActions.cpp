@@ -1,10 +1,19 @@
+//https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+
 #include <windows.h>
 #include <iostream>
 #include <vector>
+using std::vector;
+using std::cout;
 
+vector<bool> keysDown(void){
+    vector<bool> keys(256);
+    for(int i = 0; i < 256; i++){
+        keys[i] = (bool)(GetKeyState(i) & 0x8000);
+    }
+    return keys;
+}
 int main(){
-    PBYTE lpKeyState;
-    std::vector<SHORT> keys(256);
     // Sleep(2000);
     // if(GetKeyboardState(lpKeyState)){
     //     for(int i = 0; i < 256; i++){
@@ -14,17 +23,8 @@ int main(){
     //     std::cout << lpKeyState[65];
     // }
     Sleep(2000);
-    if(GetKeyboardState(lpKeyState)){
-        std::cout << "success\n";
-        if((lpKeyState[16] & 0x8000) != 0){
-            std::cout << "shift down from kbstate";
-        }
+    vector<bool> keys = keysDown();
+    if(keys[0x38]){
+        cout << "8 down";
     }
-    for(int i = 0; i < 256; i++){
-        keys[i] = GetKeyState(i);
-    }
-    if((keys[16] & 0x8000) != 0){
-        std::cout << "shift down from getkeystate";
-    }
-
 }
