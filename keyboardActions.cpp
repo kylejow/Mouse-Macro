@@ -3,6 +3,10 @@
 #include <windows.h>
 #include <iostream>
 #include <vector>
+#include <atomic>
+#include <thread>
+#include <chrono>
+
 using std::vector;
 using std::cout;
 
@@ -13,15 +17,24 @@ vector<bool> keysDown(void){
     }
     return keys;
 }
+void recordKeyboard(std::atomic_bool& stop, vector<vector<bool>>& keys){
+    while(!stop){
+        vector<bool> ajsnfanjk = keysDown();
+        keys.push_back(ajsnfanjk);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    return;
+}
+void runKeyboard(vector<vector<bool>>& keys){
+    vector<bool> prev(256, false);
+    for(auto iter = keys.begin(); iter != keys.end(); iter++){
+        for(auto iter2 = (*iter).begin(); iter2 != (*iter).end(); iter2++){
+
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+}
 int main(){
-    // Sleep(2000);
-    // if(GetKeyboardState(lpKeyState)){
-    //     for(int i = 0; i < 256; i++){
-    //         std::cout << lpKeyState[i] << ", ";
-    //     }
-    //     std::cout << "\n";
-    //     std::cout << lpKeyState[65];
-    // }
     Sleep(2000);
     vector<bool> keys = keysDown();
     if(keys[0x38]){
