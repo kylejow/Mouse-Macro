@@ -45,8 +45,12 @@ void runKeyboard(vector<vector<bool>>& keys){
     vector<bool> prev(256, false);
     for(auto iter = keys.begin(); iter != keys.end(); iter++){
         for(int i = 0; i < 256; i++){
-            if((*iter)[i] == true){
-                keyPress(0, i);
+            if((*iter)[i] == true && prev[i] == false){
+                prev[i] == true;
+                keyPress(1, i);
+            }
+            if((*iter)[i] == false && prev[i] == true){
+                prev[i] == false;
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
