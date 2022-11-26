@@ -34,7 +34,7 @@ void keyPress(int duration, int key){
     down[0].type = INPUT_KEYBOARD;
     down[0].ki.wVk= key;
     SendInput(1, down, sizeof(INPUT));
-    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(duration));
     INPUT up[1] = {0};
     up[0].type = INPUT_KEYBOARD;
     up[0].ki.wVk= key;
@@ -61,11 +61,13 @@ int main(){
     system("cls");
     cout << "\nPress shift to start recording\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
+    system("cls");
+    cout << "\nalt q to stop\n";
     std::atomic_bool stop = false;
     vector<vector<bool>> keys;
     thread stopThread(stopProgram, ref(stop));
-    thread sdjifndas(recordKeyboard, ref(stop), ref(keys));
-    sdjifndas.join();
+    thread keyboard(recordKeyboard, ref(stop), ref(keys));
+    keyboard.join();
     stopThread.join();
     system("cls");
     cout << "\nPress shift to run\n";
