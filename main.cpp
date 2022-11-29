@@ -47,11 +47,12 @@ int main(){
         system("cls");
         cout << "1. Run saved macro\n"
              << "2. Record new macro\n"
-             << "3. View macros\n"
-             << "4. Edit macro click duration\n"
-             << "5. Delete macro\n"
-             << "6. Load profile\n"
-             << "7. Export profile\n"
+             << "3. View macro list\n"
+             << "4. Print macro\n"
+             << "5. Edit macro click duration\n"
+             << "6. Delete macro\n"
+             << "7. Load profile\n"
+             << "8. Export profile\n"
              << "\n\nq to quit\n\n";
         cin >> input;
         system("cls");
@@ -88,7 +89,15 @@ int main(){
             }
             system("pause");
             continue;
-        }else if(input == "4"){
+        }else if(input == "3"){
+            if(printSavedTargets(savedMacros)){
+                continue;
+            }
+            auto chosen = chooseFromSaved(savedMacros);
+
+
+            
+        }else if(input == "5"){
             if(printSavedTargets(savedMacros)){
                 continue;
             }
@@ -99,13 +108,13 @@ int main(){
                 savedMacros[name]["clickDurations"][i] = duration;
             }
             saveToFile("profile.json", savedMacros);
-        }else if(input == "5"){
+        }else if(input == "6"){
             if(printSavedTargets(savedMacros)){
                 continue;
             }
             savedMacros.erase(chooseFromSaved(savedMacros));
             saveToFile("profile.json", savedMacros);
-        }else if(input == "6"){
+        }else if(input == "7"){
             cout << "Enter filename: ";
             cin >> filename;
             std::ifstream load(filename);
@@ -118,7 +127,7 @@ int main(){
                 system("pause");
             }
             load.close();
-        }else if(input == "7"){
+        }else if(input == "8"){
             cout << "Enter filename: ";
             cin >> filename;
             saveToFile(filename, savedMacros);
