@@ -89,14 +89,21 @@ int main(){
             }
             system("pause");
             continue;
-        }else if(input == "3"){
+        }else if(input == "4"){
             if(printSavedTargets(savedMacros)){
                 continue;
             }
-            auto chosen = chooseFromSaved(savedMacros);
-
-
-            
+            string name = chooseFromSaved(savedMacros);
+            vector<int> delays = savedMacros[name]["delays"];
+            vector<int> clickDurations = savedMacros[name]["clickDurations"];
+            system("cls");
+            cout << name << ":\n\n";
+            for(unsigned long long int i = 0; i < delays.size(); i++){
+                cout << "Waiting " << delays[i] << "ms\n";
+                cout << "Clicking down for "<< clickDurations[i] << "ms\n";
+            }
+            cout << "\n\n";
+            system("pause");
         }else if(input == "5"){
             if(printSavedTargets(savedMacros)){
                 continue;
