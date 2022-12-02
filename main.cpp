@@ -48,7 +48,7 @@ int main(){
         cout << "1. Run saved macro\n"
              << "2. Record new macro\n"
              << "3. View macro list\n"
-             << "4. Print macro\n"
+             << "4. View macro content\n"
              << "5. Edit macro click duration\n"
              << "6. Delete macro\n"
              << "7. Load profile\n"

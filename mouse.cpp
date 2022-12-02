@@ -11,6 +11,14 @@ void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen){
     // return mi; black screen when returning MOUSINPUT?
 }
 
+POINT absInputToPoint(MOUSEINPUT& mi, screen& screen){
+    POINT p;
+    double ABS = 65535.0;
+    p.x = ((LONG)mi.dx*screen.getXLen())/ABS;
+    p.y = ((LONG)mi.dy*screen.getYLen())/ABS;
+    return p;
+}
+
 void recordMovements(std::atomic_bool& stop, vector<POINT>& locations){
     POINT pos;
     while(!stop){

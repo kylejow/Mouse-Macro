@@ -19,6 +19,7 @@ using std::thread;
 using std::cout;
 
 void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen);
+POINT absInputToPoint(MOUSEINPUT& mi, screen& screen);
 void recordMovements(std::atomic_bool& stop, vector<POINT>& locations);
 void moveToPoint(POINT& p, screen& screen);
 void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations);
