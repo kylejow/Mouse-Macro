@@ -74,7 +74,7 @@ int main(){
             int pol = savedMacros[name]["polling"];
             system("cls");
             cout << "Running...\n\n";
-            thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
+            thread mouseMovement(runMovement, ref(locations), ref(screen), ref(pol));
             runClicks(clickDurations, delays);
             mouseMovement.join();
             system("cls");
@@ -141,6 +141,9 @@ int main(){
             cout << "Enter filename: ";
             cin >> filename;
             saveToFile(filename, savedMacros);
+        }else if(input == "9"){
+            string prompt = "Enter new polling rate: ";
+            polling = getIntInput(prompt);
         }else if(input == "q"){
             break;
         }
