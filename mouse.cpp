@@ -19,12 +19,12 @@ POINT absInputToPoint(MOUSEINPUT& mi, screen& screen){
     return p;
 }
 
-void recordMovements(std::atomic_bool& stop, vector<POINT>& locations){
+void recordMovements(std::atomic_bool& stop, vector<POINT>& locations, int& polling){
     POINT pos;
     while(!stop){
         GetCursorPos(&pos);
         locations.push_back(pos);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
     }
     return;
 }
@@ -66,7 +66,7 @@ void click(int& duration){
     SendInput(1, up, sizeof(INPUT));
 }
 
-nlohmann::ordered_json recordMouse(void){
+nlohmann::ordered_json recordMouse(int& polling){
     vector<int> delays;
     vector<int> clickDurations;
     vector<POINT> locations;
@@ -77,7 +77,7 @@ nlohmann::ordered_json recordMouse(void){
     std::atomic_bool stop = false;
     thread stopThread(stopProgram, ref(stop));
     thread recordClick(recordClicks, ref(stop), ref(delays), ref(clickDurations));
-    thread recordMovement(recordMovements, ref(stop), ref(locations));
+    thread recordMovement(recordMovements, ref(stop), ref(locations), std::ref(polling));
     system("cls");
     setCursor(false);
     POINT p;
@@ -105,10 +105,10 @@ nlohmann::ordered_json recordMouse(void){
 }
 
 
-void runMovement(vector<POINT>& locations, screen& screen){
+void runMovement(vector<POINT>& locations, screen& screen, int& polling){
     for(auto iter = locations.begin(); iter != locations.end(); iter++){
         moveToPoint(*iter, screen);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(polling));
     }
 }
 

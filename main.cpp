@@ -42,6 +42,7 @@ int main(){
     load.close();
     screen screen;
     string input;
+    int polling = 1;
     while(1){
         system("cls");
         cout << "1. Run saved macro\n"
@@ -52,6 +53,7 @@ int main(){
              << "6. Delete macro\n"
              << "7. Load profile\n"
              << "8. Export profile\n"
+             << "9. Change polling rate (Current: " << polling << "ms)\n"
              << "\n\nq to quit\n\n";
         cin >> input;
         system("cls");
@@ -69,9 +71,10 @@ int main(){
                 locations[i].y = iter[1];
                 i++;
             }
+            int pol = savedMacros[name]["polling"];
             system("cls");
             cout << "Running...\n\n";
-            thread mouseMovement(runMovement, ref(locations), ref(screen));
+            thread mouseMovement(runMovement, ref(locations), ref(screen), ref(polling));
             runClicks(clickDurations, delays);
             mouseMovement.join();
             system("cls");
@@ -80,7 +83,8 @@ int main(){
             string name;
             cout << "Enter macro name: ";
             cin >> name;
-            savedMacros[name] = recordMouse();
+            savedMacros[name] = recordMouse(polling);
+            savedMacros[name]["polling"] = polling;
             saveToFile("profile.json", savedMacros);
         }else if(input == "3"){
             if(printSavedTargets(savedMacros)){

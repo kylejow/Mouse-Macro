@@ -20,12 +20,12 @@ using std::cout;
 
 void pointToABSInput(MOUSEINPUT& mi, POINT& p, screen& screen);
 POINT absInputToPoint(MOUSEINPUT& mi, screen& screen);
-void recordMovements(std::atomic_bool& stop, vector<POINT>& locations);
+void recordMovements(std::atomic_bool& stop, vector<POINT>& locations, int& polling);
 void moveToPoint(POINT& p, screen& screen);
 void recordClicks(std::atomic_bool& stop, vector<int>& delays, vector<int>& clickDurations);
 void click(int& duration);
-nlohmann::ordered_json recordMouse(void);
-void runMovement(vector<POINT>& locations, screen& screen);
+nlohmann::ordered_json recordMouse(int& polling);
+void runMovement(vector<POINT>& locations, screen& screen, int& polling);
 void runClicks(vector<int>& clickDurations, vector<int>& delays);
 
 #endif
