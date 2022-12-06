@@ -84,7 +84,7 @@ nlohmann::ordered_json recordMouse(int& polling){
     while(!stop){
         GetCursorPos(&p);
         cout << "Current Location: " << p.x << ", " << p.y << "             \n";
-        cout << "\n\nPress alt + q to stop recording\n";
+        cout << "\n\nPress esc to stop recording\n";
         clearScreen();
     }
     stopThread.join();
