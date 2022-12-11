@@ -71,7 +71,7 @@ nlohmann::ordered_json recordMouse(int& polling){
     vector<int> clickDurations;
     vector<POINT> locations;
     system("cls");
-    cout << "\nPress shift to start recording\n";
+    cout << "Press shift to start recording\n";
     while(!(GetKeyState(VK_SHIFT) & 0x8000)){};
 
     std::atomic_bool stop = false;

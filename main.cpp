@@ -100,7 +100,8 @@ int main(){
             vector<int> delays = savedMacros[name]["delays"];
             vector<int> clickDurations = savedMacros[name]["clickDurations"];
             system("cls");
-            cout << name << ":\n\n";
+            cout << "Name: " << name << "\n";
+            cout << "Polling rate: " << savedMacros[name]["polling"] << "ms\n\n";
             for(unsigned long long int i = 0; i < delays.size(); i++){
                 cout << "Waiting " << delays[i] << "ms\n";
                 cout << "Clicking down for "<< clickDurations[i] << "ms\n";
@@ -125,7 +126,7 @@ int main(){
             savedMacros.erase(chooseFromSaved(savedMacros));
             saveToFile("profile.json", savedMacros);
         }else if(input == "7"){
-            cout << "Enter filename: ";
+            cout << "Enter backup filename: ";
             cin >> filename;
             std::ifstream load(filename);
             if(load){
@@ -138,7 +139,7 @@ int main(){
             }
             load.close();
         }else if(input == "8"){
-            cout << "Enter filename: ";
+            cout << "Enter backup filename: ";
             cin >> filename;
             saveToFile(filename, savedMacros);
         }else if(input == "9"){
